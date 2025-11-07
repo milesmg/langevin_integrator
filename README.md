@@ -27,6 +27,9 @@ In the paper, the authors focus on splitting methods for numerical implementatio
 
 ## To Do:
 
+#### Notes:
+- As I noted in my most recent commit, this method is both very numerically unstable and contains actual errors. Beads often seem to get trapped at the toroidal boundary. I wonder if there is some sort of sign issue making forces attractive. I'm really not sure. 
+
 #### Functionality:
 - build a potential matrix
 - build some kind of box 
