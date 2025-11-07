@@ -110,6 +110,7 @@ def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, tra
             ))
 
     if outfile:
+        outfile = '../visualizations_html/' + outfile
         fig.write_html(outfile, include_plotlyjs="cdn")
     return fig
 
