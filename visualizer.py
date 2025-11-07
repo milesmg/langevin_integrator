@@ -1,7 +1,4 @@
-# %% [markdown]
-# # Here, I build out the Langevin integrator capacities of my system. 
 
-# %%
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly
@@ -15,14 +12,8 @@ from mpl_toolkits.mplot3d import Axes3D
 FloatArray = NDArray[np.floating]
 
 
-# %% [markdown]
-# # Visualization
-
-# %%
-# This is mostly ChatGPT code; I'm not a plotly expert. 
-
 def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, trail:int=1, stride:int=1, title:str ="Visualizing", 
-            point_size:int = 3, box=True, outfile:str ='outfile.md'):
+            point_size:int = 3, box=True, outfile:str ='outfile.html'):
     
     # going to plot everything
     # using a trace so things are more visualizable
@@ -124,27 +115,28 @@ def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, tra
 
 
 
-# %%
-def generate_plot(qTable,L,step,idx:int=0,unwrap:bool=False):
-    if unwrap:
-        """Reconstructs a continuous trajectory from wrapped coordinates."""
-        d = np.diff(qTable[:,idx], axis=0)
-        d -= L * np.round(d / L) # Minimum image convention on the *difference*
-        [x,y,z]=np.vstack([qTable[:,idx,0], qTable[:,idx,0] + np.cumsum(d, axis=0)])
-    else:
-        [x,y,z] = qTable[:,idx]
-
-
+def generate_plot(qTable,L,step,idx:int=0,unwrap:bool=False,numParticles:int = 1):
     fig = plt.figure(figsize=(8, 7))
-    plot_title = f'trajectory of particle {idx}' + 'unwrapped' if unwrap else 'wrapped'
+    plot_title = f'trajectory of particles {idx} up to {numParticles + idx}' + ' unwrapped' if unwrap else ' wrapped'
     ax = fig.add_subplot(111, projection='3d')
-    div = 5000
-    x = x[::step]
-    y = y[::step]
-    z = z[::step]
-    ax.plot(x,y,z)
-    t = np.linspace(0,1, int(len(qTable)/div))
-    scatter = ax.scatter(x,y,z,c=t,cmap= "viridis", s = 1)
+    for currParticle in range(idx,numParticles+idx):
+        # pull out one trajectory
+        q = qTable[::step, currParticle]                
+        if unwrap:
+            # get all the differences between positions in frames
+            d = np.diff(q, axis=0)
+            # if a particle moves > L/2 per frame, it's crossed the periodic boundary
+            d -= L * np.rint(d / L)
+            # adjust accordinly
+            q = np.vstack([q[0], q[0] + np.cumsum(d, axis=0)])
+        else:
+            q=np.mod(q,L)
+        x, y, z = q.T
+        x = x[::step]
+        y = y[::step]
+        z = z[::step]
+        t = np.linspace(0,1, int(len(qTable)/step))
+        ax.scatter(x,y,z,c=t,cmap= "viridis", s = 1,label = f'Trajectory of Particle {idx+currParticle}')
     ax.set(xlabel="x", ylabel="y", zlabel="z", title=plot_title)
     ax.legend()
     plt.tight_layout()
