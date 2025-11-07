@@ -100,7 +100,7 @@ def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, tra
         }]
     )
 
-    fig = go.Figure(data=data0, frames=frames, layout=layout)
+    fig = grapher.Figure(data=data0, frames=frames, layout=layout)
 
     # Optional: wireframe box
     if box:
@@ -108,7 +108,7 @@ def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, tra
                             [0,0,L],[L,0,L],[L,L,L],[0,L,L],[0,0,L]])
         edges = [(0,1),(1,2),(2,3),(3,0),(5,6),(6,7),(7,8),(8,5),(0,5),(1,6),(2,7),(3,8)]
         for a,b in edges:
-            fig.add_trace(go.Scatter3d(
+            fig.add_trace(grapher.Scatter3d(
                 x=[corners[a,0], corners[b,0]],
                 y=[corners[a,1], corners[b,1]],
                 z=[corners[a,2], corners[b,2]],

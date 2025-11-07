@@ -3,10 +3,9 @@
 import numpy as np
 import scipy as sp
 import time
-import nbformat
+
 from typing import Optional, Tuple, List, Literal, Callable
 from numpy.typing import NDArray
-
 FloatArray = NDArray[np.floating]
 
 
