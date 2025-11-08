@@ -28,7 +28,9 @@ In the paper, the authors focus on splitting methods for numerical implementatio
 ## To Do:
 
 #### Notes:
-- As I noted in my most recent commit, this method is both very numerically unstable and contains actual errors. Beads often seem to get trapped at the toroidal boundary. I wonder if there is some sort of sign issue making forces attractive. I'm really not sure. 
+- Two major issues: 
+    - I think there's a sign error in my forces that is making things attractive rather than repulsive.
+    - I need to decide what to numba/njit-ify
 
 #### Functionality:
 - build a potential matrix
