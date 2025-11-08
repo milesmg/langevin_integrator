@@ -25,29 +25,22 @@ Langevin dynamics is a clever implementation of standard mechanics in a heat bat
 
 In the paper, the authors focus on splitting methods for numerical implementations of Langevin dynamics. Splitting methods get around the problem of the analytical intractability of these equations. It is impossible to solve these integrals in an elementary manner, and it is numerically quite inefficient to try to one-shot them. Rather, as we are already breaking up our simulations into timesteps, it makes sense to apply individual components of our Langevin dynamics separately, allowing for simpler computation. Observe that we can break the process above into the system of equations $$\begin{aligned} dq =& M^{-1}pdt \\ dp =& -\nabla U(q) dt + (-\gamma p + \xi(t) \sqrt{2\gamma k_B Tm})dt \end{aligned}$$ where $p,q \in \mathbb{R}^{3N}$ are the state vectors for our $N$ particles. We can split this into three pieces: $$\begin{aligned}A =& [M^{-1}p \ \ 0]^Tdt \\ B=&  [0 \ \ -\nabla U(q) ]^Tdt \\ O =&  [0 \ \ (-\gamma p + \xi(t) \sqrt{2\gamma k_B Tm}) ]^Tdt\end{aligned}$$ which we apply to our system $[dq \ \  dp]^T$. We then apply these split operations in whatever order we choose, so long as the timesteps we afford each operation average out to equivalence. The order that the authors of this paper settle on is **BAOAB**. 
 
-## To Do:
+## To Do
 
-#### Notes:
+##### Notes:
 - Two major issues: 
-    - I think there's a sign error in my forces that is making things attractive rather than repulsive.
+    - Sign error in my non-numba forces?
     - I need to decide what to numba/njit-ify
 
-#### Functionality:
-- build a potential matrix
-- build some kind of box 
-- add periodic boundary conditions
+##### Functionality:
 
 
-#### Aesthetics
+##### Aesthetics:
 - store data in SQL table
-- build some kind of visualization
-- build into multiple python/cython/c/sql etc. files
-    - main: sets parameters, runs simulation
-    - integrator: the engine; runs all the computations
-    - visualizer: builds the visualizations
-    - data processer: builds database of experiments
 
-#### Optimization
+##### Optimization:
+- numba
 
-- improve the O step with better numerics
-- make this compiled code (cython?) or re-write in c++
+## Compiled Code
+
+See: https://numba.pydata.org/numba-doc/dev/user/5minguide.html?utm_source=chatgpt.com
