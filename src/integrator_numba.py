@@ -9,21 +9,32 @@ from numpy.typing import NDArray
 FloatArray = NDArray[np.floating]
 
 
-def get_harmonic_U(k,L):
-    def U(q):
-        difs = q[:, None, :] - q[None, :, :]      # Here, we create a matrix of differences q_i - q_j
-        difs -= L * np.round(difs / L)             
-        sumSquares = np.sum(difs**2,axis=2) # sum the x,y, and z components to get an N x N matrix
+def harmonic_U(q,k,L):
+    N = len(q)
+    half = 0.5 * L
+    sumSquares = 0
+    for i in range(N-1):
+        for j in range(i+1, N):
+            dif = q[j] - q[i]            
+            for idx in range(3):
+                if dif[idx] >  half:  dif[idx] -= L
+                elif dif[idx] <= -half: dif[idx] += L
+                sumSquares += dif[idx]**2
+    return (0.5 *k * sumSquares)
 
-        return(0.5*k*np.sum(np.triu(sumSquares,k=1))) # we only care about the unique pairs
-    return(U) 
+def harmonic_Nabla(q,k,L):
+    N = len(q)
+    half = 0.5*L
+    sum = np.zeros(np.shape(q))
+    for i in range(N):
+        for j in range(N):
+            dif = q[i]-q[j]
+            for idx in range(3):
+                if dif[idx] >  half:  dif[idx] -= L
+                elif dif[idx] <= -half: dif[idx] += L
+            sum += dif
+    return(k*sum)
 
-def get_harmonic_Nabla(k,L):
-    def Nabla(q):
-        difs = q[:, None, :] - q[None, :, :]      # See function above for explanatino
-        difs -= L * np.round(difs / L)  
-        return(k* np.sum(difs,axis = 1)) # sum over j, noting that the dif for j=i is 0
-    return(Nabla) 
 
 
 def apply_A(p,q,dt,M):

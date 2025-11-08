@@ -14,7 +14,8 @@ FloatArray = NDArray[np.floating]
 
 def generate_video(qTable:Optional[FloatArray] = None, L:Optional[int]=None, trail:int=1, stride:int=1, title:str ="Visualizing", 
             point_size:int = 3, box=True, outfile:str ='outfile.html'):
-    
+    raise ValueError('Sorry, this does not work yet.')
+    return
     # going to plot everything
     # using a trace so things are more visualizable
     # stride will choose which frames
@@ -131,12 +132,12 @@ def generate_plot(qTable,L,step,idx:int=0,unwrap:bool=False,numParticles:int = 1
             # adjust accordinly
             q = np.vstack([q[0], q[0] + np.cumsum(d, axis=0)])
         else:
-            q=np.mod(q,L)
+            q = q[1:]
         x, y, z = q.T
         x = x[::step]
         y = y[::step]
         z = z[::step]
-        t = np.linspace(0,1, int(len(qTable)/step))
+        t = np.linspace(0,1, int(len(q)/step))
         ax.scatter(x,y,z,c=t,cmap= "viridis", s = 1,label = f'Trajectory of Particle {idx+currParticle}')
     ax.set(xlabel="x", ylabel="y", zlabel="z", title=plot_title)
     ax.legend()
