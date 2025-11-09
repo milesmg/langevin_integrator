@@ -43,4 +43,4 @@ In the paper, the authors focus on splitting methods for numerical implementatio
 
 ## Compiled Code
 
-See: https://numba.pydata.org/numba-doc/dev/user/5minguide.html?utm_source=chatgpt.com
+See: https://numba.pydata.org/numba-doc/dev/user/5minguide.html
